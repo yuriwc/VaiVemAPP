@@ -28,9 +28,9 @@ const App = () => {
       };
 
     return(
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <View style={[backgroundStyle, styles.container]}>
-                <Text>Nós precisaremos de acesso à sua localização, para gerenciar sua comunidade</Text>
+                <Text style= {[{color: isDarkMode ? Colors.white : Colors.black}]}>Nós precisaremos de acesso à sua localização, para gerenciar sua comunidade</Text>
                 <Button title='Conceder Localização' onPress={() => handleGPSPermission()}/>
             </View>
         </SafeAreaView>
@@ -38,9 +38,13 @@ const App = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeContainer: {
+        flex: 1
+    },
+    container :{
         flex: 1,
-        padding: 10
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 
