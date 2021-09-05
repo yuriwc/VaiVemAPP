@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import SignUp from '../SignUp';
 
 
 
@@ -70,7 +71,7 @@ function MyTabs() {
         HomeIcon = focused ? 'ios-home' : 'ios-home-outline';
         return <Icon name={HomeIcon} size={size} color={color}/>
       }}} />
-      <Tab.Screen name="Emprestar" component={App} options={{tabBarIcon: ({focused, color, size}) => {
+      <Tab.Screen name="Emprestar" component={SignUp} options={{tabBarIcon: ({focused, color, size}) => {
         let icon;
         icon = focused ? 'ios-wallet' : 'ios-wallet-outline';
         return <Icon name={icon} size={size} color={color}/>

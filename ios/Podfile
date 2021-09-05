@@ -5,7 +5,9 @@ platform :ios, '11.0'
 
 target 'vaivem' do
   config = use_native_modules!
+  permissions_path = '../node_modules/react-native-permissions/ios'
 
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'GoogleSignIn'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
