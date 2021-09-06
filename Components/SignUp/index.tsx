@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Button, StyleSheet, Text, useColorScheme, View, PermissionsAndroid, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
     Colors,
@@ -20,6 +20,30 @@ const handleGPSPermission = async () => {
     }
 }
 
+const requestGPSPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Permissão de GPS. VaiVem",
+          message:
+            "Nós precisamos de acesso ao GPS, para pesquisar " +
+            "por usuários que estão próximos de você.",
+          buttonNeutral: "Pergunte-me depois",
+          buttonNegative: "Negar",
+          buttonPositive: "Consentir"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use GPS");
+      } else {
+        console.log("GPS permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
 const App = () => {
     const isDarkMode = useColorScheme() === 'dark';
 
@@ -31,7 +55,7 @@ const App = () => {
         <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <View style={[backgroundStyle, styles.container]}>
                 <Text style= {[{color: isDarkMode ? Colors.white : Colors.black}]}>Nós precisaremos de acesso à sua localização, para gerenciar sua comunidade</Text>
-                <Button title='Conceder Localização' onPress={() => handleGPSPermission()}/>
+                <Button title='Conceder Localização' onPress={() => Platform.OS ==='ios' ? handleGPSPermission() :  requestGPSPermission()}/>
             </View>
         </SafeAreaView>
     )

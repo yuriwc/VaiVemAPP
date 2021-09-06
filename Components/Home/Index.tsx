@@ -6,7 +6,8 @@ import {
   Text,
   useColorScheme,
   View,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
 
 import UserContext from '../Context/UserContext';
@@ -70,11 +71,18 @@ const App = ( {navigation} ) => {
     }
   }
 
-  function configureGoogleSign() {
-    GoogleSignin.configure({
-      webClientId: "806189079871-80vocopfrh3fh957drg6nr9dfgv3pdis.apps.googleusercontent.com",
-      offlineAccess: false
-    });
+  async function configureGoogleSign() {
+    if (Platform.OS === 'android') {
+      await GoogleSignin.configure({
+        forceCodeForRefreshToken: true,
+      })
+    } else {
+      await GoogleSignin.configure({
+        webClientId: "806189079871-80vocopfrh3fh957drg6nr9dfgv3pdis.apps.googleusercontent.com",
+        forceCodeForRefreshToken: true,
+        offlineAccess: false
+      })
+    }
   }
 
   const backgroundStyle = {
