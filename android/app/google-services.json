@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "806189079871",
+    "project_id": "vaivem-f5367",
+    "storage_bucket": "vaivem-f5367.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806189079871:android:3b2ea7b4b5700b6d6d878a",
+        "android_client_info": {
+          "package_name": "com.vaivem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "806189079871-pg9o2tk9p5oe9fh80hdlfrdi1h6cqaad.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vaivem",
+            "certificate_hash": "7024a8b80d1557b84b81df1ace60215ff2c4546e"
+          }
+        },
+        {
+          "client_id": "806189079871-dk8lfs35ijanetu335mdvfgktuklgoe6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-BHuRUBoxVwy9jfXmVHrBk61yPj5q8rA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "806189079871-dk8lfs35ijanetu335mdvfgktuklgoe6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "806189079871-80vocopfrh3fh957drg6nr9dfgv3pdis.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yuricavalcante.vaivem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
