@@ -93,7 +93,7 @@ const App = ({navigation}) => {
         let response = await postUserAPI(json);
         let { mensagem } = response;
           if(mensagem == 'Criado com sucesso'){
-            await AsyncStorage.setItem('@loggedIn','false');
+            await AsyncStorage.setItem('@loggedIn','true');
             navigation.navigate('Homescreen');
           }
       }
@@ -123,9 +123,9 @@ const App = ({navigation}) => {
                     coordinate={{latitude: position.latitude, longitude: position.longitude}}
                   />
                 </MapView>
-                {!isGPSAuthorized ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
+                {(position.latitude === 0 || position.longitude === 0) ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
                 <Text style= {[{color: isDarkMode ? Colors.white : Colors.black, marginTop: 150}]}>Por favor, informe a sua data de nascimento</Text>
-                <DatePicker date={date} onDateChange={setDate} mode={"date"} locale="pt"/>
+                <DatePicker style={{margin: 10}} date={date} onDateChange={setDate} mode={"date"} locale="pt"/>
                 {(position.latitude === 0 || position.longitude === 0) ? null : <Button title='Cadastrar Usuário' onPress={() => postUser()}/> }
             </View>
         </SafeAreaView>
