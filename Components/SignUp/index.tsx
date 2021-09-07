@@ -28,10 +28,13 @@ const App = ({navigation}) => {
       }
       else if (res === RESULTS.DENIED) {
           const res2 = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-          res2 === RESULTS.GRANTED ?
-              setGPS(true)
-          :
-              console.log('nok agora')
+          if(res2 === RESULTS.GRANTED){
+            setGPS(true)
+            Geolocation.getCurrentPosition(info => 
+              setPosition({latitude: info.coords.latitude, longitude: info.coords.longitude})
+            );
+          }else
+            console.log('nok agora')
       }
   }
 
