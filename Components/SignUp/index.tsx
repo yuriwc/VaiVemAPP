@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
     Colors,
   } from 'react-native/Libraries/NewAppScreen';
-  import { API_BASE } from 'react-native-dotenv'
 
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -112,7 +111,7 @@ const App = () => {
                     coordinate={{latitude: position.latitude, longitude: position.longitude}}
                   />
                 </MapView>
-                {(position.latitude === 0 || position.longitude === 0) ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
+                {!isGPSAuthorized ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
                 <Text style= {[{color: isDarkMode ? Colors.white : Colors.black, marginTop: 150}]}>Por favor, informe a sua data de nascimento</Text>
                 <DatePicker date={date} onDateChange={setDate} mode={"date"} locale="pt"/>
                 {(position.latitude === 0 || position.longitude === 0) ? null : <Button title='Cadastrar Usuário' onPress={() => postUser()}/> }
