@@ -1,61 +1,121 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, useColorScheme, View, PermissionsAndroid, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
     Colors,
   } from 'react-native/Libraries/NewAppScreen';
+  import { API_BASE } from 'react-native-dotenv'
 
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions'
-
-const handleGPSPermission = async () => {
-    const res = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    if(res === RESULTS.GRANTED)
-        console.log('ok');
-    else if (res === RESULTS.DENIED) {
-        const res2 = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        res2 === RESULTS.GRANTED ?
-            console.log('ok agora')
-        :
-            console.log('nok agora')
-    }
-}
-
-const requestGPSPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: "Permissão de GPS. VaiVem",
-          message:
-            "Nós precisamos de acesso ao GPS, para pesquisar " +
-            "por usuários que estão próximos de você.",
-          buttonNeutral: "Pergunte-me depois",
-          buttonNegative: "Negar",
-          buttonPositive: "Consentir"
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use GPS");
-      } else {
-        console.log("GPS permission denied");
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import { postUserAPI, getUserApi }from '../../src/Apis';
+import DatePicker from 'react-native-date-picker'
 
 const App = () => {
     const isDarkMode = useColorScheme() === 'dark';
+    const [isGPSAuthorized, setGPS] =  useState(false);
+    const [date, setDate] = useState(new Date())
+    const [position, setPosition] = useState({"latitude":0, "longitude":0})
+
+    const handleGPSPermission = async () => {
+      const res = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if(res === RESULTS.GRANTED)
+         setGPS(true);
+      else if (res === RESULTS.DENIED) {
+          const res2 = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+          res2 === RESULTS.GRANTED ?
+              setGPS(true)
+          :
+              console.log('nok agora')
+      }
+  }
+
+  
+  const requestGPSPermission = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: "Permissão de GPS. VaiVem",
+            message:
+              "Nós precisamos de acesso ao GPS, para pesquisar " +
+              "por usuários que estão próximos de você.",
+            buttonNeutral: "Pergunte-me depois",
+            buttonNegative: "Negar",
+            buttonPositive: "Consentir"
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("You can use GPS");
+        } else {
+          console.log("GPS permission denied");
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+
+
+    function getLocation(){
+      Geolocation.getCurrentPosition(info => 
+        setPosition({latitude: info.coords.latitude, longitude: info.coords.longitude})
+        );
+    }
 
     const backgroundStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
       };
 
+      async function postUser(){
+        let dateFinal = `${date.getUTCFullYear()}-${date.getUTCMonth()+1}-${date.getDate()}`
+        let nome = await AsyncStorage.getItem('@name')
+        let email = await AsyncStorage.getItem('@email')
+        Geolocation.getCurrentPosition(info => setPosition({"latitude": info.coords.latitude, "longitude": info.coords.longitude}));
+        let json = {
+          "nome": nome,
+          "dataNascimento": dateFinal,
+          "email": email,
+          "latitude": position.latitude,
+          "longitude": position.longitude,
+          "cidade": '',
+          "urlimg":''
+        }
+
+        postUserAPI(json);
+       // getUserApi('matosf.yuri@gmail.com');
+      }
+
     return(
         <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <View style={[backgroundStyle, styles.container]}>
-                <Text style= {[{color: isDarkMode ? Colors.white : Colors.black}]}>Nós precisaremos de acesso à sua localização, para gerenciar sua comunidade</Text>
-                <Button title='Conceder Localização' onPress={() => Platform.OS ==='ios' ? handleGPSPermission() :  requestGPSPermission()}/>
+              <MapView
+                onPress={(data) => setPosition({latitude : data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude})}
+                zoomEnabled={false}
+                  initialRegion={{
+                    latitude: -12.699438,
+                    longitude: -38.295582,
+                    latitudeDelta: 0.0022,
+                    longitudeDelta: 0.0021,
+                  }}
+                  region={{
+                    latitude: position.latitude,
+                    longitude: position.longitude,
+                    latitudeDelta: 0.0022,
+                    longitudeDelta: 0.0021,
+                  }}
+                  style={styles.map}
+                >
+                  <Marker
+                    onDragEnd={(e)=>console.log(e)}
+                    coordinate={{latitude: position.latitude, longitude: position.longitude}}
+                  />
+                </MapView>
+                {(position.latitude === 0 || position.longitude === 0) ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
+                <Text style= {[{color: isDarkMode ? Colors.white : Colors.black, marginTop: 150}]}>Por favor, informe a sua data de nascimento</Text>
+                <DatePicker date={date} onDateChange={setDate} mode={"date"} locale="pt"/>
+                {(position.latitude === 0 || position.longitude === 0) ? null : <Button title='Cadastrar Usuário' onPress={() => postUser()}/> }
             </View>
         </SafeAreaView>
     )
@@ -69,6 +129,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    map: {
+      top: 0,
+      width: '100%',
+      height: '30%',
+      position: 'relative',
     }
 })
 

@@ -12,7 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4B66617A26E4741600080043 /* libGoogleSignIn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B66617926E4741600080043 /* libGoogleSignIn.a */; };
-		4B66617D26E474E600080043 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B66617C26E474E600080043 /* GoogleService-Info.plist */; };
+		4BC0727326E704DF00CF5BEA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BC0727226E704DF00CF5BEA /* GoogleService-Info.plist */; };
 		6172F2D35A4C3AA820D92908 /* libPods-vaivem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-vaivem.a */; };
 		7EF68E3733C33B6898317E18 /* libPods-vaivem-vaivemTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-vaivem-vaivemTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -43,7 +43,7 @@
 		1D0AE47A65C8663E3B452821 /* Pods-vaivem-vaivemTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vaivem-vaivemTests.release.xcconfig"; path = "Target Support Files/Pods-vaivem-vaivemTests/Pods-vaivem-vaivemTests.release.xcconfig"; sourceTree = "<group>"; };
 		2F074066E7E34801A0150C5B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		4B66617926E4741600080043 /* libGoogleSignIn.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGoogleSignIn.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B66617C26E474E600080043 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4BC0727226E704DF00CF5BEA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		55981910995D4895806DE1C1 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		57C9C783468F4AE496E5DE89 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		5BCA85E00BB94D09A0B52101 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 		13B07FAE1A68108700A75B9A /* vaivem */ = {
 			isa = PBXGroup;
 			children = (
-				4B66617C26E474E600080043 /* GoogleService-Info.plist */,
+				4BC0727226E704DF00CF5BEA /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -292,7 +292,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				4B66617D26E474E600080043 /* GoogleService-Info.plist in Resources */,
+				4BC0727326E704DF00CF5BEA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +546,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M48Z29GLGF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = vaivem/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -557,7 +558,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuricavalcante.vaivem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matchbook.vaivem;
 				PRODUCT_NAME = vaivem;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -572,6 +573,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M48Z29GLGF;
 				INFOPLIST_FILE = vaivem/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -582,7 +584,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yuricavalcante.vaivem;
+				PRODUCT_BUNDLE_IDENTIFIER = com.matchbook.vaivem;
 				PRODUCT_NAME = vaivem;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
