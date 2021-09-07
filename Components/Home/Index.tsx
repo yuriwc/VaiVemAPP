@@ -10,8 +10,6 @@ import {
   Platform
 } from 'react-native';
 
-import UserContext from '../Context/UserContext';
-
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
@@ -23,9 +21,8 @@ import {
 } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const App = ( {navigation} ) => {
+const App = ({navigation}) => {
   const [userInfo, setUserInfo] = useState([] as any);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState(null);
   const isDarkMode = useColorScheme() === 'dark';
   
@@ -34,12 +31,6 @@ const App = ( {navigation} ) => {
     configureGoogleSign();
   },[])
 
-  const user = useContext(UserContext);
-  
-  async function getUser(){
-    let value = await GoogleSignin.getCurrentUser();
-  }
-
   async function signIn() {
     
     try {
@@ -47,11 +38,9 @@ const App = ( {navigation} ) => {
       const userInfo = await GoogleSignin.signIn();
       setUserInfo(userInfo);
       setError(null);
-      setIsLoggedIn(true);
-      await AsyncStorage.setItem('@loggedIn', 'true');
       await AsyncStorage.setItem('@name', ''+userInfo.user.name);
       await AsyncStorage.setItem('@email', ''+userInfo.user.email);
-      navigation.navigate('Homescreen');
+      navigation.navigate('SignUp');
 
     } catch (error:any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -90,7 +79,6 @@ const App = ( {navigation} ) => {
   };
 
   return (
-    <UserContext.Provider value={{auth: isLoggedIn, user:userInfo}}>
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
           <View style={[backgroundStyle, styles.container]}>
@@ -102,7 +90,6 @@ const App = ( {navigation} ) => {
             />
           </View>
         </SafeAreaView>
-    </UserContext.Provider>
   );
 };
 

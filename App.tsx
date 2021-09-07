@@ -17,6 +17,7 @@ import {
 import Homescreen from './Components/Home/Home';
 import Sign from './Components/Home/Index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SignUp from './Components/SignUp';
 
 function Home() {
 
@@ -54,6 +55,7 @@ function Home() {
         <Stack.Navigator {...Splash ? {initialRouteName: 'Homescreen'} : {initialRouteName: 'Login'}}  screenOptions={{headerShown: false}}>
           <Stack.Screen name="Login" component={Sign} />
           <Stack.Screen name="Homescreen" component={Homescreen} />
+          <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>
       </NavigationContainer>
   );

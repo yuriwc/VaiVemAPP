@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, useColorScheme, View, PermissionsAndroid, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, Text, useColorScheme, View, PermissionsAndroid, Platform, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
     Colors,
@@ -7,12 +7,12 @@ import {
 
 import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MapView, { MAP_TYPES, Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { postUserAPI, getUserApi }from '../../src/Apis';
+import { postUserAPI }from '../../src/Apis';
 import DatePicker from 'react-native-date-picker'
 
-const App = () => {
+const App = ({navigation}) => {
     const isDarkMode = useColorScheme() === 'dark';
     const [isGPSAuthorized, setGPS] =  useState(false);
     const [date, setDate] = useState(new Date())
@@ -20,8 +20,12 @@ const App = () => {
 
     const handleGPSPermission = async () => {
       const res = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-      if(res === RESULTS.GRANTED)
+      if(res === RESULTS.GRANTED){
          setGPS(true);
+         Geolocation.getCurrentPosition(info => 
+          setPosition({latitude: info.coords.latitude, longitude: info.coords.longitude})
+          );
+      }
       else if (res === RESULTS.DENIED) {
           const res2 = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
           res2 === RESULTS.GRANTED ?
@@ -31,7 +35,6 @@ const App = () => {
       }
   }
 
-  
   const requestGPSPermission = async () => {
       try {
         const granted = await PermissionsAndroid.request(
@@ -47,20 +50,22 @@ const App = () => {
           }
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log("You can use GPS");
+            Geolocation.getCurrentPosition(info => 
+              setPosition({latitude: info.coords.latitude, longitude: info.coords.longitude})
+              );
         } else {
-          console.log("GPS permission denied");
+          Alert.alert('Atenção','Precisamos do acesso à sua localização');
         }
       } catch (err) {
         console.warn(err);
       }
     };
 
-
     function getLocation(){
-      Geolocation.getCurrentPosition(info => 
-        setPosition({latitude: info.coords.latitude, longitude: info.coords.longitude})
-        );
+      if(Platform.OS === 'ios')
+        handleGPSPermission();
+      else
+        requestGPSPermission();
     }
 
     const backgroundStyle = {
@@ -82,8 +87,12 @@ const App = () => {
           "urlimg":''
         }
 
-        postUserAPI(json);
-       // getUserApi('matosf.yuri@gmail.com');
+        let response = await postUserAPI(json);
+        let { mensagem } = response;
+          if(mensagem == 'Criado com sucesso'){
+            await AsyncStorage.setItem('@loggedIn','false');
+            navigation.navigate('Homescreen');
+          }
       }
 
     return(

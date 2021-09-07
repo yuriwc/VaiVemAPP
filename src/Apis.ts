@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { API_BASE, API_LOGIN, API_PASSWORD } from 'react-native-dotenv'
+import { API_BASEURL, API_LOGIN, API_PASSWORD } from 'react-native-dotenv'
 
 
-export function postUserAPI(data:any){
-    axios.post(`${API_BASE}/usuario`,{
+export async function postUserAPI(data:any){
+    return axios.post(`${API_BASEURL}/usuario`,{
         'nome': data.nome, 'dataNascimento': data.dataNascimento, 'email': data.email, 'latitude': data.latitude, 'longitude': data.longitude, 'cidade': data.cidade, 'urlimg': data.urlimg
     },{
         auth:{
@@ -21,8 +21,20 @@ export function postUserAPI(data:any){
         }})
 }
 
-export function getUserApi(data:any){
-    axios.get(`${API_BASE}/usuario/${data}`)
+export async function getUserApi(data:any){
+    axios.get(`${API_BASEURL}/usuario/${data}`)
+    .then((response) => response.data)
+    .catch(function (error) {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        }})
+}
+
+export async function deleteUser(data:string){
+    axios.delete(`${API_BASEURL}/usuario/${data}`)
     .then((response) => response.data)
     .catch(function (error) {
         if (error.response) {
