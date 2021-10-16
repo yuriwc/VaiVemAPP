@@ -4,7 +4,7 @@ import { API_BASEURL, API_LOGIN, API_PASSWORD } from 'react-native-dotenv'
 
 export async function postUserAPI(data:any){
     return axios.post(`${API_BASEURL}/usuario`,{
-        'nome': data.nome, 'dataNascimento': data.dataNascimento, 'email': data.email, 'latitude': data.latitude, 'longitude': data.longitude, 'cidade': data.cidade, 'urlimg': data.urlimg
+        'nome': data.nome, 'dataNascimento': data.dataNascimento, 'email': data.email, 'latitude': data.latitude, 'longitude': data.longitude, 'cidade': data.cidade, 'urlimg': data.urlimg, 'idstatus': data.idstatus
     },{
         auth:{
             "username" : `${API_LOGIN}`,
@@ -15,9 +15,9 @@ export async function postUserAPI(data:any){
     .catch(function (error) {
         if (error.response) {
           // Request made and server responded
-          console.log(error.response.data);
           console.log(error.response.status);
           console.log(error.response.headers);
+          return error.response.data;
         }})
 }
 
@@ -43,4 +43,21 @@ export async function deleteUser(data:string){
           console.log(error.response.status);
           console.log(error.response.headers);
         }})
+}
+
+export async function getLivros(){
+  return axios.get(`${API_BASEURL}/livro`,{
+    auth:{
+      "username" : `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  })
+  .then((response) => response.data)
+  .catch(function (error){
+    if(error.response){
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+    }
+  })
 }

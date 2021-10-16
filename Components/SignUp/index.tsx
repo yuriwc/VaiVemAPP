@@ -84,17 +84,21 @@ const App = ({navigation}) => {
           "nome": nome,
           "dataNascimento": dateFinal,
           "email": email,
+          "idstatus": 1,
           "latitude": position.latitude,
           "longitude": position.longitude,
           "cidade": '',
           "urlimg":''
         }
-
         let response = await postUserAPI(json);
+        console.log(response);
         let { mensagem } = response;
           if(mensagem == 'Criado com sucesso'){
             await AsyncStorage.setItem('@loggedIn','true');
             navigation.navigate('Homescreen');
+          }else {
+            if(mensagem == 'Usuário já existe')
+              Alert.alert("Atenção", "Usuário já cadastrado.")
           }
       }
 
