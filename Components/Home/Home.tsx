@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Image,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -11,7 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import Emprestar from '../Emprestar';
 import SwipeCards from "react-native-swipe-cards-deck"
-import { getLivros } from '../../src/Apis';
+import { getLivros, getLivrosProx } from '../../src/Apis';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -27,27 +28,52 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [name, setName] = useState('');
+  const [coordenadas, setCoordenadas] = useState({latitude: 0, longitude: 0})
   const [email, setEmail] = useState('');
-  const [livros, setLivros] = useState([])
-  const myIcon = <Icon name="home" size={30} color="#900" />;
+  const [livros, setLivros] = useState([]) as any;
+  //const myIcon = <Icon name="home" size={30} color="#900" />;
 
   async function getAllLivros(){
     let value = await getLivros();
     setLivros(value.livros)
-    console.log(livros)
+    return value.livros;
+  }
+
+  async function getLivrosProximos(){
+    let latitude = await AsyncStorage.getItem('@latitude') as string;
+    let longitude = await AsyncStorage.getItem('@longitude') as string;
+    let id = await AsyncStorage.getItem('idUser');
+    let livros = await getLivrosProx(Number(latitude),Number(longitude),3, 99);
+    setLivros(livros.livros)
+    console.log(livros.livros);
+  }
+
+  function distancia(lat1:number,long1:number,lat2:number,lon2:number){
+    var pi = Math.PI;
+    var acos = Math.acos;
+    var cos = Math.cos;
+    var sin = Math.sin;
+    lat1 = lat1 * (pi/180);
+    lat2 = lat2 * (pi/180);
+    long1 = long1 * (pi/180);
+    lon2= lon2 * (pi/180);
+    var distancia = (6371 * acos(cos(lat1) * cos(lat2) * cos(lon2 - long1) + sin(lat1) * sin(lat2)));    
+    return distancia;
   }
 
   useEffect(() => {
     getUser();
-    getAllLivros();
+    getLivrosProximos();
   },[])
   
-  async function getUser(){
+  async function getUser(){    
     let name = await AsyncStorage.getItem('@name') as string;
     let email = await AsyncStorage.getItem('@email') as string;
     setName(name);
     setEmail(email);
   }
+
+ 
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -55,14 +81,14 @@ const App = () => {
 
   function Card({ data }) {
     return (
-      <View style={[styles.card, { backgroundColor: 'gray' }]}>
-        <Text>{data.id}</Text>
+      <View style={[styles.card]}>
+        <Text style={{color: isDarkMode ? Colors.white : Colors.black, backgroundColor: isDarkMode? Colors.darker : Colors.lighter, maxWidth: '90%'}}>{data.nome} | {data.autor} | Distância: {data.distancia}</Text>
+        <Image style={{width: '90%', height: '90%'}} source={{uri: data.foto}} />
       </View>
     );
   }
   
   function StatusCard({ text }) {
-    console.log(text);
     return (
       <View>
         <Text style={styles.cardsText}>{text}</Text>
@@ -97,7 +123,7 @@ const App = () => {
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
             <View style={[backgroundStyle, styles.container]}>
-              <Text style={[{color: isDarkMode ? Colors.white : Colors.black }]}>
+              <Text style={{color: isDarkMode ? Colors.white : Colors.black }}>
                 Olá, {name}
               </Text>
               {livros ? (
@@ -117,6 +143,11 @@ const App = () => {
               ) : (
                 <StatusCard text="Loading..." />
               )}
+              <View style={{width: '100%', height: 60, backgroundColor: 'red', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row'}}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>QTD. Livros: {livros.length}</Text>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>Distância: 4km</Text>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>Comunidade: 4</Text>
+              </View>
             </View>
           </SafeAreaView>
   );

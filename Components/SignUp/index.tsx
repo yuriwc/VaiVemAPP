@@ -9,7 +9,7 @@ import { PERMISSIONS, check, request, RESULTS } from 'react-native-permissions'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { postUserAPI }from '../../src/Apis';
+import { postUserAPI, getUserApi }from '../../src/Apis';
 import DatePicker from 'react-native-date-picker'
 
 const App = ({navigation}) => {
@@ -91,14 +91,23 @@ const App = ({navigation}) => {
           "urlimg":''
         }
         let response = await postUserAPI(json);
-        console.log(response);
         let { mensagem } = response;
           if(mensagem == 'Criado com sucesso'){
             await AsyncStorage.setItem('@loggedIn','true');
+            await AsyncStorage.setItem('@latitude',''+position.latitude);
+            await AsyncStorage.setItem('@longitude',''+position.longitude);
+            await AsyncStorage.setItem('@iduser',''+response.usuariostatus.id);
             navigation.navigate('Homescreen');
           }else {
-            if(mensagem == 'Usuário já existe')
-              Alert.alert("Atenção", "Usuário já cadastrado.")
+            if(mensagem == 'Usuário já existe'){
+              let response = await getUserApi(email);
+              console.log('--------------',response);
+              await AsyncStorage.setItem('@loggedIn','true');
+              await AsyncStorage.setItem('@latitude',''+response.usuariostatus.latitude);
+              await AsyncStorage.setItem('@longitude',''+response.usuariostatus.longitude);
+              await AsyncStorage.setItem('@iduser',''+response.usuariostatus.id);
+              navigation.navigate('Homescreen');
+            }
           }
       }
 

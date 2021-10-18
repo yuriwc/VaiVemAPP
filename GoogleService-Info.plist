@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>806189079871-80vocopfrh3fh957drg6nr9dfgv3pdis.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.806189079871-80vocopfrh3fh957drg6nr9dfgv3pdis</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>806189079871-pg9o2tk9p5oe9fh80hdlfrdi1h6cqaad.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC0N54QqYMDGnB4KGkFyuK2y9rih3GLASY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>806189079871</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.yuricavalcante.vaivem</string>
+	<key>PROJECT_ID</key>
+	<string>vaivem-f5367</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vaivem-f5367.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:806189079871:ios:e1b28c08224266156d878a</string>
+</dict>
+</plist>

@@ -21,6 +21,25 @@ export async function postUserAPI(data:any){
         }})
 }
 
+export async function postLivrosAPI(idlivro:string, latitude:number, longitude:number, idUser:number, nome:string, foto:string, autor:string, editora:string){
+  return axios.post(`${API_BASEURL}/livro`,{
+      'qrcode': null, 'idlivroapi': idlivro, "disponivel": true, "latitude": latitude, 'longitude': longitude, "nome":nome, "idusuario": idUser, 'foto': foto, 'autor': autor, "editora":editora
+  },{
+      auth:{
+          "username" : `${API_LOGIN}`,
+          "password": `${API_PASSWORD}`
+      }
+  })      
+  .then((response) => response.data)
+  .catch(function (error) {
+      if (error.response) {
+        // Request made and server responded
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return error.response.data;
+      }})
+}
+
 export async function getUserApi(data:any){
    return axios.get(`${API_BASEURL}/usuariostatus/${data}`, {
       auth:{
@@ -52,6 +71,23 @@ export async function deleteUser(data:string){
 
 export async function getLivros(){
   return axios.get(`${API_BASEURL}/livro`,{
+    auth:{
+      "username" : `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  })
+  .then((response) => response.data)
+  .catch(function (error){
+    if(error.response){
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+    }
+  })
+}
+
+export async function getLivrosByIdApi(idlivro:string, iduser:number){
+  return axios.get(`${API_BASEURL}/getlivrobyidapi/${idlivro}/${iduser}`,{
     auth:{
       "username" : `${API_LOGIN}`,
       "password": `${API_PASSWORD}`
