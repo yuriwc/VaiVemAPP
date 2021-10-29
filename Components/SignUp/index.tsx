@@ -76,6 +76,7 @@ const App = ({navigation}) => {
       };
 
       async function postUser(){
+        await AsyncStorage.setItem('@distancia', '5')
         let dateFinal = `${date.getUTCFullYear()}-${date.getUTCMonth()+1}-${date.getDate()}`
         let nome = await AsyncStorage.getItem('@name')
         let email = await AsyncStorage.getItem('@email')
@@ -96,15 +97,14 @@ const App = ({navigation}) => {
             await AsyncStorage.setItem('@loggedIn','true');
             await AsyncStorage.setItem('@latitude',''+position.latitude);
             await AsyncStorage.setItem('@longitude',''+position.longitude);
-            await AsyncStorage.setItem('@iduser',''+response.usuariostatus.id);
+            await AsyncStorage.setItem('@iduser',''+response.id);
             navigation.navigate('Homescreen');
           }else {
             if(mensagem == 'Usuário já existe'){
               let response = await getUserApi(email);
-              console.log('--------------',response);
               await AsyncStorage.setItem('@loggedIn','true');
               await AsyncStorage.setItem('@latitude',''+response.usuariostatus.latitude);
-              await AsyncStorage.setItem('@longitude',''+response.usuariostatus.longitude);
+              await AsyncStorage.setItem('@longitude',''+response.usuariostatus.longitude);;
               await AsyncStorage.setItem('@iduser',''+response.usuariostatus.id);
               navigation.navigate('Homescreen');
             }
@@ -112,36 +112,39 @@ const App = ({navigation}) => {
       }
 
     return(
+      <>
+      <MapView
+      onPress={(data) => setPosition({latitude : data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude})}
+      zoomEnabled={false}
+        initialRegion={{
+          latitude: -12.699438,
+          longitude: -38.295582,
+          latitudeDelta: 0.0022,
+          longitudeDelta: 0.0021,
+        }}
+        region={{
+          latitude: position.latitude,
+          longitude: position.longitude,
+          latitudeDelta: 0.0022,
+          longitudeDelta: 0.0021,
+        }}
+        style={styles.map}
+      >
+        <Marker
+          onDragEnd={(e)=>console.log(e)}
+          coordinate={{latitude: position.latitude, longitude: position.longitude}}
+        />
+      </MapView>
         <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <View style={[backgroundStyle, styles.container]}>
-              <MapView
-                onPress={(data) => setPosition({latitude : data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude})}
-                zoomEnabled={false}
-                  initialRegion={{
-                    latitude: -12.699438,
-                    longitude: -38.295582,
-                    latitudeDelta: 0.0022,
-                    longitudeDelta: 0.0021,
-                  }}
-                  region={{
-                    latitude: position.latitude,
-                    longitude: position.longitude,
-                    latitudeDelta: 0.0022,
-                    longitudeDelta: 0.0021,
-                  }}
-                  style={styles.map}
-                >
-                  <Marker
-                    onDragEnd={(e)=>console.log(e)}
-                    coordinate={{latitude: position.latitude, longitude: position.longitude}}
-                  />
-                </MapView>
+             
                 {(position.latitude === 0 || position.longitude === 0) ? <Button title='Conceder Localização' onPress={() => getLocation()}/> : null}
                 <Text style= {[{color: isDarkMode ? Colors.white : Colors.black, marginTop: 150}]}>Por favor, informe a sua data de nascimento</Text>
                 <DatePicker style={{margin: 10}} date={date} onDateChange={setDate} mode={"date"} locale="pt"/>
                 {(position.latitude === 0 || position.longitude === 0) ? null : <Button title='Cadastrar Usuário' onPress={() => postUser()}/> }
             </View>
         </SafeAreaView>
+        </>
     )
 }
 

@@ -13,26 +13,51 @@ import AccountIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Emprestar from '../Emprestar';
 import SwipeCards from "react-native-swipe-cards-deck"
 import { getLivros, getLivrosProx } from '../../src/Apis';
+import Details from './Details';
+import Account from '../Account/index';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 
 
-const App = () => {
+const App = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [name, setName] = useState('');
   const [coordenadas, setCoordenadas] = useState({latitude: 0, longitude: 0})
   const [email, setEmail] = useState('');
+  const [km, setKm] = useState(5);
   const [livros, setLivros] = useState([]) as any;
   //const myIcon = <Icon name="home" size={30} color="#900" />;
 
+  useEffect(() => {
+    getUser();
+    getDistancia();
+    getLivrosProximos();
+  },[])
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getDistancia();
+      getLivrosProximos();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
+
+  function handleClickonBook(data:any){
+    navigation.navigate('Details',{data});
+  }
   async function getAllLivros(){
     let value = await getLivros();
     setLivros(value.livros)
@@ -40,12 +65,15 @@ const App = () => {
   }
 
   async function getLivrosProximos(){
+    let dist = await AsyncStorage.getItem('@distancia') as string;
+    if(dist == null)
+      dist = ''+5
     let latitude = await AsyncStorage.getItem('@latitude') as string;
     let longitude = await AsyncStorage.getItem('@longitude') as string;
-    let id = await AsyncStorage.getItem('idUser');
-    let livros = await getLivrosProx(Number(latitude),Number(longitude),3, 99);
+    let id = Number(await AsyncStorage.getItem('@iduser'));
+    console.log(dist)
+    let livros = await getLivrosProx(Number(latitude),Number(longitude),Number(dist), id);
     setLivros(livros.livros)
-    console.log(livros.livros);
   }
 
   function distancia(lat1:number,long1:number,lat2:number,lon2:number){
@@ -61,10 +89,7 @@ const App = () => {
     return distancia;
   }
 
-  useEffect(() => {
-    getUser();
-    getLivrosProximos();
-  },[])
+ 
   
   async function getUser(){    
     let name = await AsyncStorage.getItem('@name') as string;
@@ -81,10 +106,12 @@ const App = () => {
 
   function Card({ data }) {
     return (
-      <View style={[styles.card]}>
-        <Text style={{color: isDarkMode ? Colors.white : Colors.black, backgroundColor: isDarkMode? Colors.darker : Colors.lighter, maxWidth: '90%'}}>{data.nome} | {data.autor} | Distância: {data.distancia}</Text>
-        <Image style={{width: '90%', height: '90%'}} source={{uri: data.foto}} />
-      </View>
+      <TouchableWithoutFeedback onLongPress={() => handleClickonBook(data)}>
+        <View style={[styles.card]}>
+          <Text style={{color: isDarkMode ? Colors.white : Colors.black, backgroundColor: isDarkMode? Colors.darker : Colors.lighter, maxWidth: '90%'}}>{data.nome} | {data.autor} | Distância: {data.distancia}</Text>
+          <Image style={{width: '90%', height: '90%'}} source={{uri: data.foto}} />
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
   
@@ -95,6 +122,11 @@ const App = () => {
       </View>
     );
   }
+
+  async function getDistancia(){
+    let dist = await AsyncStorage.getItem('@distancia') as string;
+    setKm(Number(dist));
+}
 
   function handleYup(card:any) {
     console.log(`Sim for ${card.text}`);
@@ -123,15 +155,13 @@ const App = () => {
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
             <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
             <View style={[backgroundStyle, styles.container]}>
-              <Text style={{color: isDarkMode ? Colors.white : Colors.black }}>
-                Olá, {name}
-              </Text>
               {livros ? (
                 <SwipeCards
                   cards={livros}
+                  loop={true}
                   renderCard={(cardData:any) => <Card data={cardData} />}
                   keyExtractor={(cardData:any) => String(cardData.id)}
-                  renderNoMoreCards={() => <StatusCard text="Sem livros no momento..." />}
+                  renderNoMoreCards={() => <StatusCard text="Sem livros no momento..." />}        
                   stack={true}
                   actions={{
                     nope: { onAction: handleNope },
@@ -145,7 +175,7 @@ const App = () => {
               )}
               <View style={{width: '100%', height: 60, backgroundColor: 'red', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row'}}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>QTD. Livros: {livros.length}</Text>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>Distância: 4km</Text>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>Distância: {km} km</Text>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>Comunidade: 4</Text>
               </View>
             </View>
@@ -168,7 +198,7 @@ function MyTabs() {
         icon = focused ? 'ios-wallet' : 'ios-wallet-outline';
         return <Icon name={icon} size={size} color={color}/>
       }}} />
-      <Tab.Screen name="Minha Conta" component={App} options={{tabBarIcon: ({focused, color, size}) => {
+      <Tab.Screen name="Minha Conta" component={Account} options={{tabBarIcon: ({focused, color, size}) => {
         let Icon;
         Icon = focused ? 'account-convert' : 'account-convert-outline';
         return <AccountIcon name={Icon} size={size} color={color} />
@@ -177,15 +207,31 @@ function MyTabs() {
   );
 }
 
+const Stack = createStackNavigator();
+
+function MyStack() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="SlideHome" component={MyTabs} />
+      <Stack.Screen name="Details" component={Details} />
+    </Stack.Navigator>
+  );
+}
+
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
     backgroundColor: 'red'
   },
+  header: {
+    fontSize: 36,
+    marginTop: 48,
+    padding: 10
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    
+    
   },
   card: {
     justifyContent: "center",
@@ -198,4 +244,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyTabs;
+export default MyStack;

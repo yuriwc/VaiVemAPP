@@ -104,8 +104,8 @@ export async function getLivrosByIdApi(idlivro:string, iduser:number){
 }
 
 export async function getLivrosProx(lat:number, long:number, dist:number, id: number){
-  let dados = {"dist": 3, "lat": -12.711107, "long": -38.343671, "idusuario":id}
-  console.log(dados);
+  console.log(dist);
+  let dados = {"dist": dist, "lat": lat, "long": long, "idusuario":id}
   return axios.post(`${API_BASEURL}/livrosprox`,dados, {
     auth:{
       "username": `${API_LOGIN}`,
@@ -134,5 +134,74 @@ export async function searchBooks(search:string){
       console.log(error.response)
     else
       console.log(error);
+  })
+}
+
+export async function requestBook(idUser: number, idBook:number){
+  let data = { idsolicitante: idUser, idlivro: idBook } 
+  return axios.post(`${API_BASEURL}/solicitacoes`,data,{
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+  .catch((error) => {
+    if(error.response){       
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+      return error.response.data.mensagem;
+    }
+  })
+}
+
+export async function getAllBooksByUser(idUser: number){
+  
+  return axios.get(`${API_BASEURL}/livro/${idUser}`,{
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+  .catch((error) => {
+    if(error.response){
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    }
+  })
+}
+
+export async function getSolicitacao(idLivro: number){
+
+  return axios.get(`${API_BASEURL}/solicitacoesLivro/${idLivro}`, {
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+  .catch((error) => {
+    if(error.response){
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    }
+  })
+}
+
+export async function deleteData(id:number){
+
+  return axios.delete(`${API_BASEURL}/solicitacoesLivro/${99}`,{
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+  .catch((error) => {
+    if(error.response){
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    }
   })
 }

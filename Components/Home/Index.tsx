@@ -63,7 +63,9 @@ const App = ({navigation}) => {
   async function configureGoogleSign() {
     if (Platform.OS === 'android') {
       await GoogleSignin.configure({
-        forceCodeForRefreshToken: true,
+        webClientId: "806189079871-dk8lfs35ijanetu335mdvfgktuklgoe6.apps.googleusercontent.com",
+        offlineAccess: true,
+        
       })
     } else {
       await GoogleSignin.configure({

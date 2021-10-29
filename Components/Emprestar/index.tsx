@@ -130,13 +130,13 @@ const DetalheLivro = (props:any) =>{
       async function postBook(){
         let latitude = await AsyncStorage.getItem('@latitude') as string;
         let longitude = await AsyncStorage.getItem('@longitude') as string;
-        let id = await AsyncStorage.getItem('idUser');
-        let value = await postLivrosAPI(props.route.params.book.id,Number(latitude), Number(longitude),99,props.route.params.book.volumeInfo.title,props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',props.route.params.book.volumeInfo.authors,props.route.params.book.volumeInfo.publisher)
+        let id = await AsyncStorage.getItem('@iduser');
+        let value = await postLivrosAPI(props.route.params.book.id,Number(latitude), Number(longitude),Number(id),props.route.params.book.volumeInfo.title,props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',props.route.params.book.volumeInfo.authors,props.route.params.book.volumeInfo.publisher)
         console.log(value);
     }
         
         return(
-            <SafeAreaView style={styles.inner}>
+            <SafeAreaView style={styles.container}>
                 <ScrollView>
                     <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>{props.route.params.book.volumeInfo.title}</Text>
                     <View>
@@ -161,7 +161,8 @@ const DetalheLivro = (props:any) =>{
 
     const styles = StyleSheet.create({
         container: {
-          flex: 1
+          flex: 1,
+          padding: 20
         },
         inner: {
           padding: 10,
