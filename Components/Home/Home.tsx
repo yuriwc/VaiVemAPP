@@ -76,20 +76,6 @@ const App = ({navigation}) => {
     setLivros(livros.livros)
   }
 
-  function distancia(lat1:number,long1:number,lat2:number,lon2:number){
-    var pi = Math.PI;
-    var acos = Math.acos;
-    var cos = Math.cos;
-    var sin = Math.sin;
-    lat1 = lat1 * (pi/180);
-    lat2 = lat2 * (pi/180);
-    long1 = long1 * (pi/180);
-    lon2= lon2 * (pi/180);
-    var distancia = (6371 * acos(cos(lat1) * cos(lat2) * cos(lon2 - long1) + sin(lat1) * sin(lat2)));    
-    return distancia;
-  }
-
- 
   
   async function getUser(){    
     let name = await AsyncStorage.getItem('@name') as string;
@@ -101,14 +87,15 @@ const App = ({navigation}) => {
  
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#ffdab9' : '#ffdab9',
   };
 
   function Card({ data }) {
     return (
       <TouchableWithoutFeedback onLongPress={() => handleClickonBook(data)}>
         <View style={[styles.card]}>
-          <Text style={{color: isDarkMode ? Colors.white : Colors.black, backgroundColor: isDarkMode? Colors.darker : Colors.lighter, maxWidth: '90%'}}>{data.nome} | {data.autor} | Distância: {data.distancia}</Text>
+          <Text style={{color: isDarkMode ? Colors.white : '#003366', backgroundColor: isDarkMode? '#ffdab9' : '#ffdab9', maxWidth: '90%', fontSize: 15, fontWeight: 'bold'}}>{data.nome}</Text>
+          <Text style={{color: isDarkMode ? Colors.white : '#003366', backgroundColor: isDarkMode? '#ffdab9' : '#ffdab9', maxWidth: '90%', minWidth: '90%', fontSize: 15, textAlign: 'center', fontWeight: 'bold'}}>Distância: {data.distancia}</Text>
           <Image style={{width: '90%', height: '90%'}} source={{uri: data.foto}} />
         </View>
       </TouchableWithoutFeedback>
@@ -140,20 +127,9 @@ const App = ({navigation}) => {
     console.log(`Maybe for ${card.text}`);
     return true;
   }
-  
-  
-  let cards= [
-    { text: "Tomato", backgroundColor: "red" },
-    { text: "Aubergine", backgroundColor: "purple" },
-    { text: "Courgette", backgroundColor: "green" },
-    { text: "Blueberry", backgroundColor: "blue" },
-    { text: "Umm...", backgroundColor: "cyan" },
-    { text: "orange", backgroundColor: "orange" },
-  ];
 
   return (
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
-            <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
             <View style={[backgroundStyle, styles.container]}>
               {livros ? (
                 <SwipeCards
@@ -173,7 +149,7 @@ const App = ({navigation}) => {
               ) : (
                 <StatusCard text="Loading..." />
               )}
-              <View style={{width: '100%', height: 60, backgroundColor: 'red', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row'}}>
+              <View style={{width: '100%', height: 60, backgroundColor: '#003366', justifyContent: 'space-around', alignItems: 'center', flexDirection: 'row'}}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>QTD. Livros: {livros.length}</Text>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>Distância: {km} km</Text>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>Comunidade: 4</Text>
@@ -221,7 +197,7 @@ function MyStack() {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: '#ffdab9'
   },
   header: {
     fontSize: 36,

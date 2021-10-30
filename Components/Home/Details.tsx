@@ -32,9 +32,8 @@ const App = ({ route, navigation }) => {
         
     },[])
     return(
-        <SafeAreaView style={{flex: 1, padding: 20}}>
-            <Text style={{textAlign: 'center'}}>{data.nome}</Text>
-            
+        <SafeAreaView style={{flex: 1, padding: 20, backgroundColor: '#ffdab9'}}>
+            <Text style={[{color: isDarkMode ? Colors.white : Colors.black },{ fontSize: 36}]}>{data.nome}</Text>
             <View style={{flexDirection: 'row', height: '38%', padding: 10}}>
                 <Image style={{width: '52%', height: '100%'}} source={{uri: data.foto}} />
                 <View style={{flex: 1, padding: 20, justifyContent: 'space-evenly'}}>
@@ -50,7 +49,7 @@ const App = ({ route, navigation }) => {
             </View>
             
         <TouchableOpacity onPress={handleRequest}>
-            <View style={{width: '100%', display:'flex', height: 70, backgroundColor: 'red', justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{width: '100%', display:'flex', height: 70, backgroundColor: '#003366', justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18}}>Solicitar Empréstimo</Text>
             </View>
         </TouchableOpacity>

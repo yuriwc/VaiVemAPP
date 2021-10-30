@@ -7,7 +7,8 @@ import {
   useColorScheme,
   View,
   Alert,
-  Platform
+  Platform,
+  Image
 } from 'react-native';
 
 import {
@@ -20,6 +21,8 @@ import {
   statusCodes
 } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ImageBook} from '../../src/image/index';
+import { getUserApi } from '../../src/Apis';
 
 const App = ({navigation}) => {
   const [userInfo, setUserInfo] = useState([] as any);
@@ -40,7 +43,21 @@ const App = ({navigation}) => {
       setError(null);
       await AsyncStorage.setItem('@name', ''+userInfo.user.name);
       await AsyncStorage.setItem('@email', ''+userInfo.user.email);
-      navigation.navigate('SignUp');
+      let response = await getUserApi(userInfo.user.email);
+      console.log(response);
+
+      if(response.mensagem == 'OK'){
+        console.log('entrou')
+        await AsyncStorage.setItem('@loggedIn','true');
+        await AsyncStorage.setItem('@latitude',''+response.usuariostatus.latitude);
+        await AsyncStorage.setItem('@longitude',''+response.usuariostatus.longitude);;
+        await AsyncStorage.setItem('@iduser',''+response.usuariostatus.id);
+        navigation.navigate('Homescreen');
+      }
+      else
+        navigation.navigate('SignUp');
+
+      
 
     } catch (error:any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -77,15 +94,16 @@ const App = ({navigation}) => {
   }
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+    backgroundColor: isDarkMode ? '#ffdab9' : '#ffdab9'
   };
 
   return (
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
           <View style={[backgroundStyle, styles.container]}>
+            <Image source={ImageBook} style={{width: '100%', maxHeight: 400}}/>
             <Text
-              style={[{color: isDarkMode ? Colors.white : Colors.black,}]}
+              style={[{color: isDarkMode ? Colors.white : Colors.black, fontSize: 15}]}
               >Seja bem vindo. Faça o login para continuar.</Text>
             <GoogleSigninButton 
                 onPress={() => signIn()}
@@ -98,12 +116,12 @@ const App = ({navigation}) => {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: '#ffdab9'
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'space-around',
+    alignItems: 'center',
   }
 });
 

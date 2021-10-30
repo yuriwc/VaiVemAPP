@@ -140,7 +140,7 @@ const DetalheLivro = (props:any) =>{
                 <ScrollView>
                     <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>{props.route.params.book.volumeInfo.title}</Text>
                     <View>
-                        <Image style={{height: 250, maxWidth: '50%', padding: 20}} source={{uri: props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg'}}/>
+                      <Image style={{height: 250, maxWidth: '50%', padding: 20, marginLeft: '5%'}} source={{uri: props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg'}}/>
                         <View style={{padding: 20}}>
                             <Text>Autor/a(es/s): {props.route.params.book.volumeInfo.authors}</Text>
                             <Text>Páginas: {props.route.params.book.volumeInfo.pageCount}</Text>
@@ -150,11 +150,13 @@ const DetalheLivro = (props:any) =>{
                         </View>
                     </View>
                 </ScrollView>
-                <TouchableOpacity onPress={() => verifyBook(props.route.params.book.id,99)} style={{width: 100, height: 40}}>
-                    <View style={{width: 100, height: 40, backgroundColor: 'red', margin: 20, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{color: 'white', fontWeight: 'bold'}}>Emprestar</Text>
-                    </View>
-                </TouchableOpacity>
+                <View style={{padding: 20}}>
+                  <TouchableOpacity onPress={() => verifyBook(props.route.params.book.id,99)} style={{width: 100, height: 40}}>
+                      <View style={{width: 100, height: 40, borderRadius: 10, backgroundColor: '#003366', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                          <Text style={{color: 'white', fontWeight: 'bold'}}>Emprestar</Text>
+                      </View>
+                  </TouchableOpacity>
+                </View>
             </SafeAreaView>
         )
     }
@@ -162,16 +164,17 @@ const DetalheLivro = (props:any) =>{
     const styles = StyleSheet.create({
         container: {
           flex: 1,
-          padding: 20
+          padding: 20,
+          backgroundColor: '#ffdab9'
         },
         inner: {
           padding: 10,
           flex: 1,
-          justifyContent: "space-around"
+          justifyContent: "space-around",
+          backgroundColor: '#ffdab9'
         },
         header: {
           fontSize: 36,
-          marginBottom: 48
         },
         textInput: {
           height: 40,
