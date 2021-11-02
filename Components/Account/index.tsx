@@ -149,7 +149,7 @@ const MyBooks = () => {
             <View style={{padding: 25}}>
                 <ScrollView>
                     {livros.map((data:any, index:any) => (
-                        <TouchableOpacity key={index} onPress={() => handleClickOnBook(data.idlivro as never, data.foto as never, data.nome as never)}>
+                        <TouchableOpacity style={{margin: 5}} key={index} onPress={() => handleClickOnBook(data.idlivro as never, data.foto as never, data.nome as never)}>
                             <View style={{backgroundColor: '#003366', height: 90, padding: 15, borderRadius: 16, justifyContent: 'center'}}>
                                 <Text style={{color: 'white'}}>{data.nome}</Text>
                                 <Text style={{color: 'white'}}>Quantidade de solicitações: {data.contagem}</Text>

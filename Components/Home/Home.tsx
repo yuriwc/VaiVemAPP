@@ -15,6 +15,7 @@ import SwipeCards from "react-native-swipe-cards-deck"
 import { getLivros, getLivrosProx } from '../../src/Apis';
 import Details from './Details';
 import Account from '../Account/index';
+import Teste from '../Account/teste';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -175,6 +176,11 @@ function MyTabs() {
         return <Icon name={icon} size={size} color={color}/>
       }}} />
       <Tab.Screen name="Minha Conta" component={Account} options={{tabBarIcon: ({focused, color, size}) => {
+        let Icon;
+        Icon = focused ? 'account-convert' : 'account-convert-outline';
+        return <AccountIcon name={Icon} size={size} color={color} />
+      }}} />
+      <Tab.Screen name="Teste" component={Teste} options={{tabBarIcon: ({focused, color, size}) => {
         let Icon;
         Icon = focused ? 'account-convert' : 'account-convert-outline';
         return <AccountIcon name={Icon} size={size} color={color} />

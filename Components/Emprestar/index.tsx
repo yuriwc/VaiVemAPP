@@ -131,7 +131,7 @@ const DetalheLivro = (props:any) =>{
         let latitude = await AsyncStorage.getItem('@latitude') as string;
         let longitude = await AsyncStorage.getItem('@longitude') as string;
         let id = await AsyncStorage.getItem('@iduser');
-        let value = await postLivrosAPI(props.route.params.book.id,Number(latitude), Number(longitude),Number(id),props.route.params.book.volumeInfo.title,props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',props.route.params.book.volumeInfo.authors,props.route.params.book.volumeInfo.publisher)
+        let value = await postLivrosAPI(props.route.params.book.id,Number(latitude), Number(longitude),Number(id),props.route.params.book.volumeInfo.title,props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',props.route.params.book.volumeInfo.authors,props.route.params.book.volumeInfo.publisher, props.route.params.book.volumeInfo.description)
         console.log(value);
     }
         
