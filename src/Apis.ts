@@ -221,3 +221,35 @@ export async function emprestarLivro(id:number){
       }
     })
 }
+
+export async function meusEmprestimosFeitos(id:number){
+  return axios.get(`${API_BASEURL}/${id}/0`, {
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+    .catch((error) => {
+      if(error.response){
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    })
+}
+
+export async function meusEmprestimosSolicitados(id:number){
+  return axios.get(`${API_BASEURL}/0/${id}`, {
+    auth:{
+      "username": `${API_LOGIN}`,
+      "password": `${API_PASSWORD}`
+    }
+  }).then((response) => response.data)
+    .catch((error) => {
+      if(error.response){
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    })
+}
