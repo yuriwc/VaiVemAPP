@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, SafeAreaView, useColorScheme, StyleSheet, Button, Alert, Image, Platform } from 'react-native';
-import { getAllBooksByUser, emprestarLivro } from '../../src/Apis';
+import { getAllBooksByUser, emprestarLivro, meusEmprestimosFeitos, meusEmprestimosSolicitados, alterarEmprestimo } from '../../src/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
 
@@ -24,6 +24,7 @@ function MyStack() {
         <Stack.Screen name="Request" component={MyRequests}/>
         <Stack.Screen name="Settings" component={MySettings}/>
         <Stack.Screen name="Interno" component={InternView}/>
+        <Stack.Screen name="InternoEmprestimo" component={InternEmprestimoView}/>
       </Stack.Navigator>
     );
   }
@@ -140,7 +141,7 @@ const MyBooks = () => {
     function handleClickOnBook(idLivro:never, image:never, nome:never){
         navigation.navigate('Interno' as never, {idLivro, image, nome } as never)
     }
-    
+    Moment.locale('pt-br')
     return(
         <SafeAreaView style={{backgroundColor: "#ffdab9", flex: 1}}>
             <View style={{padding: 20}}>
@@ -163,39 +164,47 @@ const MyBooks = () => {
 
 const MySettings = () => {
 
+    const navigation = useNavigation();
+
+    const [livros, setLivros] = useState([]) as any;
+
+    async function getBook(){
+        let id = Number(await AsyncStorage.getItem('@iduser'));
+        let response = await meusEmprestimosFeitos(id)
+        console.log('response', response);
+        setLivros(response.emprestimo)
+    }
+
     const isDarkMode = useColorScheme() === 'dark';
-    const [km, setKm] = useState(5);
 
-    async function handleSave(){
-        await AsyncStorage.setItem('@distancia', ''+km);
-        Alert.alert('Salvo', 'Sua alteração foi salva com sucesso');
+    function handleClickOnBook(idLivro:any, nome:any, solicitante:any, realizacao:any, devolucao:any, idemprestimo:any){
+        navigation.navigate('InternoEmprestimo' as never, {idLivro, nome, solicitante, realizacao, devolucao, idemprestimo } as never)
     }
-
-    async function getDistancia(){
-        let dist = await AsyncStorage.getItem('@distancia') as string;
-        setKm(Number(dist));
-    }
+    
 
     useEffect(() => {
-        getDistancia();
+        getBook()
     },[]);
     return(
-        <SafeAreaView style={{padding: 10}}>
-            <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>Minhas Configurações</Text>
-            <Text style={{marginTop: 50, padding: 10}}>Por favor, delimite a distância máxima com que deseja buscar os livros.</Text>
-            <Slider
-                style={{width: 200, height: 40}}
-                minimumValue={2}
-                maximumValue={40}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
-                value={km}
-                onValueChange={(value) => setKm(Number(value.toFixed()))}
-            />
-            <Text style={{padding: 10}}>{km} Quilometros de distância</Text>
-            <Button title="Salvar Alterações" onPress={handleSave}/>
+        <SafeAreaView style={{backgroundColor: "#ffdab9", flex: 1}}>
+            <View style={{padding: 20}}>
+                <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>Meus empréstimos feitos</Text>
+            </View>
+            <View style={{padding: 25}}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {livros.map((data:any, index:any) => (
+                            <TouchableOpacity style={{marginBottom: 15}} key={index} onPress={() => handleClickOnBook(data.idlivro, data.nome, data.usuarioreceptor, data.realizacaoemprestimo, data.devolucaoemprestimo, data.idemprestimo)}>
+                                <View style={{backgroundColor: '#003366', height: 90, padding: 15, borderRadius: 16, justifyContent: 'space-around'}}>
+                                    <Text style={{color: 'white'}}>{data.nome}</Text>
+                                    <Text style={{color: 'white'}}>Data de Devolução: {Moment(data.datadevolucao).date()}/{Moment(data.datadevolucao).month()+1}/{Moment(data.datadevolucao).year()}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    
+                </ScrollView>
+            </View>
         </SafeAreaView>
-    )
+            )
 }
 
 const MyRequests = () => {
@@ -262,6 +271,53 @@ const InternView = (props:any) => {
         </SafeAreaView>
     )
 }
+
+const InternEmprestimoView = (props:any) => {
+    const isDarkMode = useColorScheme() === 'dark';
+
+    async function handleDevolucao(){
+        let json = {"devolucaoemprestimo": true}
+        let response = await alterarEmprestimo(props.route.params.idemprestimo, json)
+    }
+
+    async function handlePostergar(){
+        props.route.params.devolucao
+    }
+
+    async function handleEmprestar(){
+        let json = {"realizacaoemprestimo": true}
+        
+        let response = await alterarEmprestimo(props.route.params.idemprestimo, json)
+        
+    }
+
+   useEffect(() => {
+      
+   },[])
+
+   Moment.locale('pt-br');
+    return(
+        <SafeAreaView style={{flex: 1, backgroundColor: '#ffdab9', justifyContent: 'space-between'}}>
+            <View>
+                <View style={{padding: 20}}>
+                    <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>{props.route.params.nome}</Text>
+                </View>
+                <Image style={{width: '40%', height: 250, margin: 20}} source={{uri: props.route.params.image}} />
+            </View>
+            <View style={{backgroundColor: 'white', height: '30%', borderTopLeftRadius: 50, borderTopRightRadius: 50}}>
+                <View style={{margin: 40, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 30}}>
+                    <Text style={{fontSize: 20, lineHeight: 50}}>{props.route.params.solicitante}</Text>
+                    <View style={{display: 'flex', flexDirection: 'row'}}>
+                        {props.route.params.realizacao && props.route.params.devolucao ? <Text>Empréstimo já concluído</Text>: null}
+                        {(!props.route.params.realizacao && !props.route.params.devolucao) ?  <Button color="green" title="Realizei o empréstimo" onPress={handleEmprestar}/> : null}
+                        {(props.route.params.realizacao && !props.route.params.devolucao) ?  <View><Button color="green" title="Recebi de volta" onPress={handleDevolucao}/><Button title="Postergar Devolução" onPress={() => null}/></View> : null}
+                    </View>   
+                </View>
+            </View>
+        </SafeAreaView>
+    )
+}
+
 
 const styles = StyleSheet.create({
     
