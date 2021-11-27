@@ -190,7 +190,7 @@ export async function getSolicitacao(idLivro: number){
 
 export async function deleteData(id:number){
 
-  return axios.delete(`${API_BASEURL}/solicitacoesLivro/${99}`,{
+  return axios.delete(`${API_BASEURL}/solicitacoesLivro/${id}`,{
     auth:{
       "username": `${API_LOGIN}`,
       "password": `${API_PASSWORD}`
@@ -203,4 +203,21 @@ export async function deleteData(id:number){
       console.log(error.response.headers);
     }
   })
+}
+
+export async function emprestarLivro(id:number){
+  console.log(id)
+    return axios.post(`${API_BASEURL}/aceitarSolicitacao/${id}`,null,{
+      auth:{
+        "username": `${API_LOGIN}`,
+        "password": `${API_PASSWORD}`
+      }
+    }).then((response) => response.data)
+    .catch((error) => {
+      if(error.response){
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    })
 }

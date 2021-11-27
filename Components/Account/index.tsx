@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, SafeAreaView, useColorScheme, StyleSheet, Button, Alert, Image, Platform } from 'react-native';
-import { getAllBooksByUser } from '../../src/Apis';
+import { getAllBooksByUser, emprestarLivro } from '../../src/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
 
@@ -211,9 +211,18 @@ const InternView = (props:any) => {
     const isDarkMode = useColorScheme() === 'dark';
     async function getInformation(){
         let response = await getSolicitacao(props.route.params.idLivro);
-        console.log(response)
         setInformation(response.livrosolicitacoes);        
     }
+
+    async function solicitarEmprestimo(id: number){
+        let response = await emprestarLivro(id)
+        console.log(response);
+    }
+
+    async function handleEmprestar(id:number){
+        Alert.alert('Confirmação','Tem certeza que deseja emprestar o livro? ', [{text:'Sim', onPress: () => solicitarEmprestimo(id) }, {text:'Não', onPress: () => null}])
+    }
+
    useEffect(() => {
        getInformation();
    },[])
@@ -230,19 +239,19 @@ const InternView = (props:any) => {
             <View style={{backgroundColor: 'white', height: '30%', borderTopLeftRadius: 50, borderTopRightRadius: 50}}>
             <ScrollView horizontal>
             {informations.map((data:any, index:number) => (
-                <View key={index} style={{margin: 40}}>
+                <View key={index} style={{margin: 40, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 30}}>
                     <Text style={{fontSize: 20, lineHeight: 50}}>{data.nomeusuario}</Text>
                     <Text>Data da Solicitação: {Moment(data.datasolicitacao).date()}/{Moment(data.datasolicitacao).month()+1}/{(Moment(data.datasolicitacao).year())}</Text>
                     
 
                     {Platform.OS == 'ios' ? 
                     <View style={{display: 'flex', flexDirection: 'row'}}>
-                        <Button color="green" title="Emprestar" onPress={() => null}/>
+                        <Button color="green" title="Emprestar" onPress={() => handleEmprestar(data.idsolicitacoes)}/>
                         <Button color="red" title="Rejeitar" onPress={() => null}/>
                     </View> : 
                     
                     <View style={{display: 'flex', flexDirection: 'row'}}>
-                        <Button color="green" title="Emprestar" onPress={() => null}/>
+                        <Button color="green" title="Emprestar" onPress={() => handleEmprestar(data.idsolicitacoes)}/>
                         <Button color="red" title="Rejeitar" onPress={() => null}/>
                     </View>       
                 }
