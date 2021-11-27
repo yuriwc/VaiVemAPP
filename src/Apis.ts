@@ -22,6 +22,7 @@ export async function postUserAPI(data:any){
 }
 
 export async function postLivrosAPI(idlivro:string, latitude:number, longitude:number, idUser:number, nome:string, foto:string, autor:string, editora:string, descricao:string){
+  if(!editora) editora = ''
   return axios.post(`${API_BASEURL}/livro`,{
       'qrcode': null, 'idlivroapi': idlivro, "disponivel": true, "latitude": latitude, 'longitude': longitude, "nome":nome, "idusuario": idUser, 'foto': foto, 'autor': autor, "editora":editora, "sinopse": descricao
   },{
