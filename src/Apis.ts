@@ -105,7 +105,6 @@ export async function getLivrosByIdApi(idlivro:string, iduser:number){
 }
 
 export async function getLivrosProx(lat:number, long:number, dist:number, id: number){
-  console.log(dist);
   let dados = {"dist": dist, "lat": lat, "long": long, "idusuario":id}
   return axios.post(`${API_BASEURL}/livrosprox`,dados, {
     auth:{
@@ -157,7 +156,6 @@ export async function requestBook(idUser: number, idBook:number){
 }
 
 export async function getAllBooksByUser(idUser: number){
-  
   return axios.get(`${API_BASEURL}/livro/${idUser}`,{
     auth:{
       "username": `${API_LOGIN}`,

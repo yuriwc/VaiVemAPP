@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView, useColorScheme, StyleSheet, Button, Alert, Image } from 'react-native';
+import { Text, View, SafeAreaView, useColorScheme, StyleSheet, Button, Alert, Image, Platform } from 'react-native';
 import { getAllBooksByUser } from '../../src/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
@@ -147,9 +147,9 @@ const MyBooks = () => {
                 <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>Meus Livros</Text>
             </View>
             <View style={{padding: 25}}>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {livros.map((data:any, index:any) => (
-                        <TouchableOpacity style={{margin: 5}} key={index} onPress={() => handleClickOnBook(data.idlivro as never, data.foto as never, data.nome as never)}>
+                        <TouchableOpacity style={{marginBottom: 15}} key={index} onPress={() => handleClickOnBook(data.idlivro as never, data.foto as never, data.nome as never)}>
                             <View style={{backgroundColor: '#003366', height: 90, padding: 15, borderRadius: 16, justifyContent: 'center'}}>
                                 <Text style={{color: 'white'}}>{data.nome}</Text>
                                 <Text style={{color: 'white'}}>Quantidade de solicitações: {data.contagem}</Text>
@@ -211,6 +211,7 @@ const InternView = (props:any) => {
     const isDarkMode = useColorScheme() === 'dark';
     async function getInformation(){
         let response = await getSolicitacao(props.route.params.idLivro);
+        console.log(response)
         setInformation(response.livrosolicitacoes);        
     }
    useEffect(() => {
@@ -231,12 +232,20 @@ const InternView = (props:any) => {
             {informations.map((data:any, index:number) => (
                 <View key={index} style={{margin: 40}}>
                     <Text style={{fontSize: 20, lineHeight: 50}}>{data.nomeusuario}</Text>
-                    <Text>Data da Solicitação: {Moment(data.datasolicitacao).locale('pt-br').format('d/MM/y')}</Text>
-                    <Text>{}</Text>
+                    <Text>Data da Solicitação: {Moment(data.datasolicitacao).date()}/{Moment(data.datasolicitacao).month()+1}/{(Moment(data.datasolicitacao).year())}</Text>
+                    
+
+                    {Platform.OS == 'ios' ? 
                     <View style={{display: 'flex', flexDirection: 'row'}}>
                         <Button color="green" title="Emprestar" onPress={() => null}/>
                         <Button color="red" title="Rejeitar" onPress={() => null}/>
-                    </View>
+                    </View> : 
+                    
+                    <View style={{display: 'flex', flexDirection: 'row'}}>
+                        <Button color="green" title="Emprestar" onPress={() => null}/>
+                        <Button color="red" title="Rejeitar" onPress={() => null}/>
+                    </View>       
+                }
                 </View>
             ))}
             </ScrollView>
