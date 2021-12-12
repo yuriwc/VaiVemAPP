@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
-const App = () => {
+const App = (props:any) => {
     const socket = io("http://127.0.0.1:5000");
     socket.connect();
     
@@ -17,15 +17,17 @@ const App = () => {
     const [user, setUser] = useState('Usuário Desconectado')
     
     useEffect(() => {
-
-        getUser();
+        console.log(props.route.params.idemprestimo)
+        getUser(); 
 
         socket.on('connect', () => {
-            socket.emit('join', {username: "yuriwz", room: "120" });
+            socket.emit('join', {username: name, room: props.route.params.idemprestimo });
+           //socket.emit('leave', '110')
             setConnected(true);
         })
 
         socket.on('getMessage', (msg) => {
+           console.log(msg, messages)
             setMessages((prevVal:any) => [...prevVal, msg])
         })
     },[])
@@ -38,7 +40,8 @@ const App = () => {
 
     function handleSendMessage(){
         if(connected){
-            socket.emit('sentMessage', {room: '120', msg: {name: name, message: message}})
+            socket.emit('sentMessage', {'room': props.route.params.idemprestimo, msg: {name: name, message: message}})
+            //socket.emit('sentMessage', {name: name, message: message})
             //socket.emit('sentMessage', {room: '120', msg: {name: name, message}});
             setMessage('')
         }
