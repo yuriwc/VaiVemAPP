@@ -63,7 +63,15 @@ const App = (props:any) => {
         <Text style={[{color: isDarkMode ? Colors.white : Colors.black },styles.header]}>Buscar Livro</Text>
         <TextInput onChangeText={handleInput} placeholder="Título do Livro, Autor, Editora..." style={[{color: isDarkMode ? Colors.white : Colors.black}, styles.textInput]} placeholderTextColor={isDarkMode ? Colors.white : Colors.black}/>
         <View style={styles.btnContainer}>
-          <Button title="Pesquisar" onPress={(props:any) => navigation.navigate('Detalhes' as never, {name: searchData} as never)} />
+          {Platform.OS == 'ios' ? 
+          <Button title="Pesquisar" onPress={(props:any) => navigation.navigate('Detalhes' as never, {name: searchData} as never)} /> : 
+          <TouchableOpacity onPress={(props:any) => navigation.navigate('Detalhes' as never, {name: searchData} as never)}>
+            <View style={{backgroundColor: 'transparent', width: '100%'}}>
+              <Text style={{color: 'blue', textAlign: 'center', fontSize: 18}}>Pesquisar</Text>
+            </View>
+          </TouchableOpacity>
+          }
+          
         </View>
       </View>
     </TouchableWithoutFeedback>

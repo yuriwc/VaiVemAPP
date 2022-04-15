@@ -79,11 +79,11 @@ const App = () => {
         <SafeAreaView style={{flex: 1, justifyContent: 'space-between', backgroundColor: '#ffdab9',}}>
             <View>
                 <View style={{padding: 15}}>
-                    <Text style={[{color: isDarkMode ? Colors.white : Colors.white },styles.header]}>Minha Conta</Text>
+                    <Text style={[{color: isDarkMode ? Colors.black : Colors.black},styles.header]}>Minha Conta</Text>
                 </View>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <TouchableOpacity style={{margin: 5}} onPress={handleNavigateToMySettings}>
-                    <View style={{backgroundColor: '#BC4B4B', height: 170, width: 150, borderRadius: 40, padding: 15, justifyContent: 'center'}}>
+                    <View style={{backgroundColor: '#BC4B4B', height: 170, width: 150, borderRadius: 40, padding: 15, justifyContent: 'center', }}>
                         <Text style={{color: 'white', fontSize: 15, textAlignVertical: 'center'}}>Meus Emprestimos</Text>
                     </View>
                 </TouchableOpacity>
@@ -99,8 +99,16 @@ const App = () => {
                 </TouchableOpacity>
                 </ScrollView>
             </View>
-            <View style={{height: '40%', alignContent:'center', alignItems: 'center' ,backgroundColor: 'white', borderTopLeftRadius: 70, borderTopRightRadius: 70}}>
+            <View style={{height: '40%', alignContent:'center', alignItems: 'center' ,backgroundColor: 'white', borderTopLeftRadius: 70, borderTopRightRadius: 70,shadowColor: "#000",
+shadowOffset: {
+	width: 0,
+	height: 4,
+},
+shadowOpacity: 0.32,
+shadowRadius: 5.46,
+elevation: 9,}}>
                 <Text style={{marginTop: 50, padding: 10}}>Distância máxima para buscar os livros.</Text>
+                <Text style={{fontSize: 20, color: 'blue'}}>{km} KM</Text>
                 <Slider
                     style={{width: 200, height: 40}}
                     minimumValue={2}
@@ -110,9 +118,26 @@ const App = () => {
                     value={km}
                     onValueChange={(value) => setKm(Number(value.toFixed()))}
                 />
-                <Text style={{padding: 10}}>{km} KM</Text>
-                <Button title="Salvar Alterações" onPress={handleSave}/>
-                <Button color='red' title="Desativar minha conta" onPress={handleSave}/>
+                {Platform.OS == 'ios' ? 
+                    <Button title="Salvar Alterações" onPress={handleSave}/>
+                    :
+                    <TouchableOpacity style={{padding: 10}} onPress={handleSave}>
+                        <View>
+                            <Text style={{color: 'blue', fontSize: 15}}>Salvar Alterações</Text>
+                        </View>
+                    </TouchableOpacity>
+                }
+                
+                {Platform.OS == 'ios' ? 
+                    <Button color='red' title="Desativar minha conta" onPress={handleSave}/>
+                    :
+                    <TouchableOpacity style={{padding: 10}} onPress={handleSave}>
+                        <View>
+                            <Text style={{color: 'red', fontSize: 15}}>DESATIVAR MINHA CONTA</Text>
+                        </View>
+                    </TouchableOpacity>
+                }
+                
             </View>
         </SafeAreaView>
     )
@@ -193,8 +218,8 @@ const MySettings = () => {
     return(
         <SafeAreaView style={{backgroundColor: "#ffdab9", flex: 1}}>
             <View style={{flex: 1}}>
-                <View style={{padding: 20}}>
-                    <Text style={[{color: isDarkMode ? Colors.white : Colors.black },{fontSize: 20}]}>Meus empréstimos feitos</Text>
+                <View>
+                    <Text style={[{color: isDarkMode ? Colors.white : Colors.black },{fontSize: 20, textAlign: "center"}]}>Meus empréstimos feitos</Text>
                 </View>
                 <View style={{padding: 25}}>
                     <ScrollView showsVerticalScrollIndicator={false}>
@@ -211,8 +236,8 @@ const MySettings = () => {
                 </View>
             </View>
             <View style={{flex: 1}}>
-                <View style={{padding: 20}}>
-                    <Text style={[{color: isDarkMode ? Colors.white : Colors.black },{fontSize: 20}]}>Meus empréstimos solicitados</Text>
+                <View>
+                    <Text style={[{color: isDarkMode ? Colors.white : Colors.black },{fontSize: 20, textAlign: 'center'}]}>Meus empréstimos solicitados</Text>
                 </View>
                 <View style={{padding: 25}}>
                     <ScrollView showsVerticalScrollIndicator={false}>
@@ -337,7 +362,7 @@ const InternEmprestimoView = (props:any) => {
             </View>
             <View style={{backgroundColor: 'white', height: '30%', borderTopLeftRadius: 50, borderTopRightRadius: 50}}>
                 <View style={{margin: 40, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 30}}>
-                    <Text style={{fontSize: 20, lineHeight: 50}}>{props.route.params.solicitante}</Text>
+                    <Text style={{fontSize: 15, lineHeight: 50}}>{props.route.params.solicitante}</Text>
                     {props.route.params.realizacao && props.route.params.devolucao ? <Text>Empréstimo já concluído</Text>: null}
                     <Text onPress={() => handleToChat(1)}>Icone de Chat</Text>
                     {props.route.params.idlivro == props.route.params.idconcedente ? null : 
