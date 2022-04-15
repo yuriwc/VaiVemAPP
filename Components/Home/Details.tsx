@@ -10,7 +10,6 @@ import {
 
 const App = ({ route, navigation }) => {
     let data = route.params.data;
-    console.log(route);
     const isDarkMode = useColorScheme() === 'dark';
 
     const backgroundStyle = {

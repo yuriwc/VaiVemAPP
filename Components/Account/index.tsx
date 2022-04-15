@@ -250,7 +250,6 @@ const InternView = (props:any) => {
 
     async function solicitarEmprestimo(id: number){
         let response = await emprestarLivro(id)
-        console.log(response);
     }
 
     async function handleEmprestar(id:number){

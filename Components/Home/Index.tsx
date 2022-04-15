@@ -44,10 +44,8 @@ const App = ({navigation}) => {
       await AsyncStorage.setItem('@name', ''+userInfo.user.name);
       await AsyncStorage.setItem('@email', ''+userInfo.user.email);
       let response = await getUserApi(userInfo.user.email);
-      console.log(response);
 
       if(response.mensagem == 'OK'){
-        console.log('entrou')
         await AsyncStorage.setItem('@loggedIn','true');
         await AsyncStorage.setItem('@latitude',''+response.usuariostatus.latitude);
         await AsyncStorage.setItem('@longitude',''+response.usuariostatus.longitude);;

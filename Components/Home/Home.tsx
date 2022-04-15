@@ -72,7 +72,6 @@ const App = ({navigation}) => {
     let latitude = await AsyncStorage.getItem('@latitude') as string;
     let longitude = await AsyncStorage.getItem('@longitude') as string;
     let id = Number(await AsyncStorage.getItem('@iduser'));
-    console.log(dist)
     let livros = await getLivrosProx(Number(latitude),Number(longitude),Number(dist), id);
     setLivros(livros.livros)
   }
@@ -117,15 +116,12 @@ const App = ({navigation}) => {
 }
 
   function handleYup(card:any) {
-    console.log(`Sim for ${card.text}`);
     return true; // return false if you wish to cancel the action
   }
   function handleNope(card:any) {
-    console.log(`Nope for ${card.text}`);
     return true;
   }
   function handleMaybe(card:any) {
-    console.log(`Maybe for ${card.text}`);
     return true;
   }
 
@@ -141,9 +137,9 @@ const App = ({navigation}) => {
                   renderNoMoreCards={() => <StatusCard text="Sem livros no momento..." />}        
                   stack={true}
                   actions={{
-                    nope: { onAction: handleNope },
-                    yup: { onAction: handleYup },
-                    maybe: { onAction: handleMaybe },
+                    nope: {show: false, onAction: handleNope },
+                    yup: {show: false, onAction: handleYup },
+                    maybe: {show: false, onAction: handleMaybe },
                   }}
                   hasMaybeAction={true}
                 />

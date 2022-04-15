@@ -74,12 +74,10 @@ const App = (props:any) => {
 const DetalheLivro = (props:any) =>{
 
     const navigation = useNavigation();
-    console.log(props.route.params);
     const [books, setBooks] = useState([]) as any;
 
     async function search(){
         let value = await searchBooks(props.route.params.name);
-        console.log(value.items[0])
         setBooks(value.items)
       }
 
@@ -132,7 +130,6 @@ const DetalheLivro = (props:any) =>{
         let longitude = await AsyncStorage.getItem('@longitude') as string;
         let id = await AsyncStorage.getItem('@iduser');
         let value = await postLivrosAPI(props.route.params.book.id,Number(latitude), Number(longitude),Number(id),props.route.params.book.volumeInfo.title,props.route.params.book.volumeInfo.imageLinks ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace("http", "https") : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',props.route.params.book.volumeInfo.authors,props.route.params.book.volumeInfo.publisher, props.route.params.book.volumeInfo.description)
-        console.log(value);
     }
         
         return(

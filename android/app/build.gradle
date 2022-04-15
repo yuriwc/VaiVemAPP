@@ -124,7 +124,7 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/yuricavalcante/Projetos/VaiVemAPP/android/app/debug.keystore')
+            storeFile file('/home/yuricavalcante/Projetos/VaiVemAPP/debug.keystore')
             keyAlias 'androiddebugkey'
             storePassword 'android'
             keyPassword 'android'

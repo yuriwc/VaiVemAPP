@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "806189079871-mrge30o7i4ft53qt93cpclhj499i1lvp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vaivem",
+            "certificate_hash": "7024a8b80d1557b84b81df1ace60215ff2c4546e"
+          }
+        },
+        {
           "client_id": "806189079871-na1ss7q4753mo9ib1iviv5q22dcqrbti.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

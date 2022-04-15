@@ -17,7 +17,6 @@ const App = (props:any) => {
     const [user, setUser] = useState('Usuário Desconectado')
     
     useEffect(() => {
-        console.log(props.route.params.idemprestimo)
         getUser(); 
 
         socket.on('connect', () => {
@@ -27,7 +26,6 @@ const App = (props:any) => {
         })
 
         socket.on('getMessage', (msg) => {
-           console.log(msg, messages)
             setMessages((prevVal:any) => [...prevVal, msg])
         })
     },[])
