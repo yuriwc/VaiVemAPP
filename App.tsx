@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
@@ -34,7 +33,7 @@ function Home() {
 
   async function getCondition() {
     let condition = await AsyncStorage.getItem('@loggedIn');
-    if (condition == 'true') {
+    if (condition === 'true') {
       setSplash(true);
       setLoaded(true);
     } else {
@@ -61,9 +60,7 @@ function Home() {
     return (
       <SafeAreaView style={[backgroundStyle, styles.safeContainer]}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <View style={[backgroundStyle, styles.container]}>
-          <Text>SPLASH SCREEN</Text>
-        </View>
+        <View style={[backgroundStyle, styles.container]} />
       </SafeAreaView>
     );
   }
@@ -72,13 +69,11 @@ function Home() {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: 'red',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'red',
   },
 });
 

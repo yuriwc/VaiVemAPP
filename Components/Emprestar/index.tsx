@@ -35,7 +35,7 @@ function MyStack() {
   );
 }
 
-const App = (props: any) => {
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation();
 
@@ -72,10 +72,10 @@ const App = (props: any) => {
             placeholderTextColor={isDarkMode ? Colors.white : Colors.black}
           />
           <View style={styles.btnContainer}>
-            {Platform.OS == 'ios' ? (
+            {Platform.OS === 'ios' ? (
               <Button
                 title="Pesquisar"
-                onPress={(props: any) =>
+                onPress={() =>
                   navigation.navigate(
                     'Detalhes' as never,
                     {name: searchData} as never,
@@ -84,17 +84,14 @@ const App = (props: any) => {
               />
             ) : (
               <TouchableOpacity
-                onPress={(props: any) =>
+                onPress={() =>
                   navigation.navigate(
                     'Detalhes' as never,
                     {name: searchData} as never,
                   )
                 }>
-                <View style={{backgroundColor: 'transparent', width: '100%'}}>
-                  <Text
-                    style={{color: 'blue', textAlign: 'center', fontSize: 18}}>
-                    Pesquisar
-                  </Text>
+                <View>
+                  <Text style={styles.pesquisarText}>Pesquisar</Text>
                 </View>
               </TouchableOpacity>
             )}
@@ -109,20 +106,15 @@ const DetalheLivro = (props: any) => {
   const navigation = useNavigation();
   const [books, setBooks] = useState([]) as any;
 
-  async function search() {
-    let value = await searchBooks(props.route.params.name);
-    setBooks(value.items);
-  }
-
   useEffect(() => {
+    async function search() {
+      let value = await searchBooks(props.route.params.name);
+      setBooks(value.items);
+    }
     search();
-  }, []);
+  }, [props.route.params.name]);
 
   const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   return (
     <SafeAreaView style={styles.inner}>
@@ -140,10 +132,10 @@ const DetalheLivro = (props: any) => {
               navigation.navigate('Interno' as never, {book: item} as never)
             }
             key={index}
-            style={{padding: 30}}>
+            style={styles.p20}>
             <View>
               <Image
-                style={{height: 350, maxWidth: '80%'}}
+                style={styles.miniImg}
                 source={{
                   uri: item.volumeInfo.imageLinks
                     ? item.volumeInfo.imageLinks.thumbnail.replace(
@@ -165,13 +157,9 @@ const DetalheLivro = (props: any) => {
 const InternalBook = (props: any) => {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   async function verifyBook(idlivro: string, iduser: number) {
     let data = await getLivrosByIdApi(idlivro, iduser);
-    if (data.livros.alreadyExists == true)
+    if (data.livros.alreadyExists === true) {
       Alert.alert(
         'Atenção',
         'Você já tem esse livro cadastrado. Deseja inserir outro?',
@@ -180,18 +168,19 @@ const InternalBook = (props: any) => {
           {text: 'Não', onPress: undefined},
         ],
       );
-    else
+    } else {
       Alert.alert('Atenção', 'Deseja adicionar esse livro para emprestimo?', [
         {text: 'Sim', onPress: postBook},
         {text: 'Não', onPress: undefined},
       ]);
+    }
   }
 
   async function postBook() {
     let latitude = (await AsyncStorage.getItem('@latitude')) as string;
     let longitude = (await AsyncStorage.getItem('@longitude')) as string;
     let id = await AsyncStorage.getItem('@iduser');
-    let value = await postLivrosAPI(
+    await postLivrosAPI(
       props.route.params.book.id,
       Number(latitude),
       Number(longitude),
@@ -221,12 +210,7 @@ const InternalBook = (props: any) => {
         </Text>
         <View>
           <Image
-            style={{
-              height: 250,
-              maxWidth: '50%',
-              padding: 20,
-              marginLeft: '5%',
-            }}
+            style={styles.containerImg}
             source={{
               uri: props.route.params.book.volumeInfo.imageLinks
                 ? props.route.params.book.volumeInfo.imageLinks.thumbnail.replace(
@@ -236,7 +220,7 @@ const InternalBook = (props: any) => {
                 : 'https://m.media-amazon.com/images/I/51lwu3FTjGL.jpg',
             }}
           />
-          <View style={{padding: 20}}>
+          <View style={styles.p20}>
             <Text>
               Autor/a(es/s): {props.route.params.book.volumeInfo.authors}
             </Text>
@@ -251,27 +235,18 @@ const InternalBook = (props: any) => {
                 ? props.route.params.book.volumeInfo.averageRating
                 : 'Não Disponível'}
             </Text>
-            <Text style={{textAlign: 'justify', marginTop: 30}}>
+            <Text style={styles.someText}>
               Descrição: {props.route.params.book.volumeInfo.description}
             </Text>
           </View>
         </View>
       </ScrollView>
-      <View style={{padding: 20}}>
+      <View style={styles.p20}>
         <TouchableOpacity
           onPress={() => verifyBook(props.route.params.book.id, 99)}
-          style={{width: 100, height: 40}}>
-          <View
-            style={{
-              width: 100,
-              height: 40,
-              borderRadius: 10,
-              backgroundColor: '#003366',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>Emprestar</Text>
+          style={styles.btnEmprestar}>
+          <View style={styles.containerEmprestar}>
+            <Text style={styles.emprestarText}>Emprestar</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -283,13 +258,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#ffdab9',
+    backgroundColor: 'white',
   },
   inner: {
     padding: 10,
     flex: 1,
     justifyContent: 'space-around',
-    backgroundColor: '#ffdab9',
+    backgroundColor: 'white',
   },
   header: {
     fontSize: 36,
@@ -302,6 +277,45 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 12,
+  },
+  emprestarText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  containerEmprestar: {
+    width: 100,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#003366',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnEmprestar: {
+    width: 100,
+    height: 40,
+  },
+  p20: {
+    padding: 20,
+  },
+  someText: {
+    textAlign: 'justify',
+    marginTop: 30,
+  },
+  containerImg: {
+    height: 250,
+    maxWidth: '50%',
+    padding: 20,
+    marginLeft: '5%',
+  },
+  miniImg: {
+    height: 350,
+    maxWidth: '80%',
+  },
+  pesquisarText: {
+    color: 'blue',
+    textAlign: 'center',
+    fontSize: 18,
   },
 });
 

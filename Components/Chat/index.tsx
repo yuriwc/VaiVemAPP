@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -14,9 +15,10 @@ import {
 import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {getMessageById, postMessage} from '../../src/Apis';
 
 const App = (props: any) => {
-  const socket = io('http://127.0.0.1:5000');
+  const socket = io('http://10.0.2.2:5001');
   socket.connect();
 
   const [message, setMessage] = useState('');
@@ -25,8 +27,27 @@ const App = (props: any) => {
   const [name, setName] = useState('');
   const [user, setUser] = useState('Usuário Desconectado');
 
+  async function getMessages() {
+    const response = await getMessageById(props.route.params.idemprestimo);
+    console.log(response.chatemprestimo);
+    const messagesFromApi: {name: any; message: any}[] = [];
+    response.chatemprestimo.forEach((message: any) => {
+      console.log(message);
+      messagesFromApi.push({
+        name: message.nomeusuarioremet,
+        message: message.mensagem,
+      });
+    });
+
+    console.log('new', messagesFromApi);
+    setMessages(messagesFromApi);
+  }
+
+  console.log(messages);
+
   useEffect(() => {
     getUser();
+    getMessages();
 
     socket.on('connect', () => {
       socket.emit('join', {
@@ -40,15 +61,24 @@ const App = (props: any) => {
     socket.on('getMessage', msg => {
       setMessages((prevVal: any) => [...prevVal, msg]);
     });
-  }, [name, props.route.params.idemprestimo, socket]);
+  }, []);
 
   async function getUser() {
     let name = (await AsyncStorage.getItem('@name')) as string;
     setName(name);
   }
 
-  function handleSendMessage() {
+  async function handleSendMessage() {
+    let idUser = (await AsyncStorage.getItem('@iduser')) as string;
     if (connected) {
+      /* postMessage(
+        Number(idUser),
+        props.route.params.idemprestimo,
+        message,
+        props.route.params.idconcedente === Number(idUser)
+          ? props.route.params.idsolicitante
+          : props.route.params.idconcedente,
+      ); */
       socket.emit('sentMessage', {
         room: props.route.params.idemprestimo,
         msg: {name: name, message: message},

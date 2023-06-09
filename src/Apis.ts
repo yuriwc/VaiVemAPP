@@ -9,7 +9,7 @@ import {
 export async function postUserAPI(data: any) {
   return axios
     .post(
-      `${API_BASEURL}/usuario`,
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/usuario`,
       {
         nome: data.nome,
         dataNascimento: data.dataNascimento,
@@ -52,9 +52,9 @@ export async function postLivrosAPI(
   if (!editora) editora = '';
   return axios
     .post(
-      `${API_BASEURL}/livro`,
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/livro`,
       {
-        qrcode: null,
+        qrcode: '',
         idlivroapi: idlivro,
         disponivel: true,
         latitude: latitude,
@@ -85,13 +85,20 @@ export async function postLivrosAPI(
 }
 
 export async function getUserApi(data: any) {
+  console.log(
+    `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/usuariostatus/${data}`,
+  );
+
   return axios
-    .get(`${API_BASEURL}/usuariostatus/${data}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/usuariostatus/${data}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(function (error) {
       if (error.response) {
@@ -105,7 +112,9 @@ export async function getUserApi(data: any) {
 
 export async function deleteUser(data: string) {
   axios
-    .delete(`${API_BASEURL}/usuario/${data}`)
+    .delete(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/usuario/${data}`,
+    )
     .then(response => response.data)
     .catch(function (error) {
       if (error.response) {
@@ -119,12 +128,15 @@ export async function deleteUser(data: string) {
 
 export async function getLivros() {
   return axios
-    .get(`${API_BASEURL}/livro`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/livro`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(function (error) {
       if (error.response) {
@@ -137,12 +149,15 @@ export async function getLivros() {
 
 export async function getLivrosByIdApi(idlivro: string, iduser: number) {
   return axios
-    .get(`${API_BASEURL}/getlivrobyidapi/${idlivro}/${iduser}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/getlivrobyidapi/${idlivro}/${iduser}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(function (error) {
       if (error.response) {
@@ -161,12 +176,16 @@ export async function getLivrosProx(
 ) {
   let dados = {dist: dist, lat: lat, long: long, idusuario: id};
   return axios
-    .post(`${API_BASEURL}/livrosprox`, dados, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .post(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/livrosprox`,
+      dados,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
 
     .catch(error => {
@@ -182,7 +201,7 @@ export async function searchBooks(search: string) {
   return axios
     .get('https://www.googleapis.com/books/v1/volumes', {
       params: {
-        key: `${API_BASE}`,
+        key: `AIzaSyDtxCHj0QSB0ZRZSIWeuhfmaiRNUg6QWYU`,
         q: search,
       },
     })
@@ -196,12 +215,16 @@ export async function searchBooks(search: string) {
 export async function requestBook(idUser: number, idBook: number) {
   let data = {idsolicitante: idUser, idlivro: idBook};
   return axios
-    .post(`${API_BASEURL}/solicitacoes`, data, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .post(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/solicitacoes`,
+      data,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -214,13 +237,17 @@ export async function requestBook(idUser: number, idBook: number) {
 }
 
 export async function getAllBooksByUser(idUser: number) {
+  console.log(API_BASEURL);
   return axios
-    .get(`${API_BASEURL}/livro/${idUser}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/livro/${idUser}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -233,12 +260,15 @@ export async function getAllBooksByUser(idUser: number) {
 
 export async function getSolicitacao(idLivro: number) {
   return axios
-    .get(`${API_BASEURL}/solicitacoesLivro/${idLivro}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/solicitacoesLivro/${idLivro}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -251,12 +281,15 @@ export async function getSolicitacao(idLivro: number) {
 
 export async function deleteData(id: number) {
   return axios
-    .delete(`${API_BASEURL}/solicitacoesLivro/${id}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .delete(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/solicitacoesLivro/${id}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -270,12 +303,16 @@ export async function deleteData(id: number) {
 export async function emprestarLivro(id: number) {
   console.log(id);
   return axios
-    .post(`${API_BASEURL}/aceitarSolicitacao/${id}`, null, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .post(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/aceitarSolicitacao/${id}`,
+      null,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -288,12 +325,15 @@ export async function emprestarLivro(id: number) {
 
 export async function meusEmprestimosFeitos(id: number) {
   return axios
-    .get(`${API_BASEURL}/meusEmprestimos/${id}/0`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/meusEmprestimos/${id}/0`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -306,12 +346,15 @@ export async function meusEmprestimosFeitos(id: number) {
 
 export async function meusEmprestimosSolicitados(id: number) {
   return axios
-    .get(`${API_BASEURL}/meusEmprestimos/0/${id}`, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/meusEmprestimos/0/${id}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {
@@ -324,12 +367,70 @@ export async function meusEmprestimosSolicitados(id: number) {
 
 export async function alterarEmprestimo(id: number, data: any) {
   return axios
-    .put(`${API_BASEURL}/emprestimo/${id}`, data, {
-      auth: {
-        username: `${API_LOGIN}`,
-        password: `${API_PASSWORD}`,
+    .put(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/emprestimo/${id}`,
+      data,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
       },
-    })
+    )
+    .then(response => response.data)
+    .catch(error => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+}
+
+export async function postMessage(
+  idUser: number,
+  idemprestimo: number,
+  message: string,
+  idconcedente: number,
+) {
+  console.log(idUser, idemprestimo, message, idconcedente);
+  return axios
+    .post(
+      'https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/enviarMensagem',
+      {
+        idusuarioremet: idUser,
+        idemprestimo: idemprestimo,
+        mensagem: message,
+        idusuariodest: idconcedente,
+      },
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
+      },
+    )
+    .then(response => response.data)
+    .catch(error => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    });
+}
+
+export async function getMessageById(id: number) {
+  return axios
+    .get(
+      `https://728b-2804-29b8-51f3-4da-385a-2ccb-d0fa-7b55.ngrok-free.app/mensagensEmprestimo/${id}`,
+      {
+        auth: {
+          username: `${API_LOGIN}`,
+          password: `${API_PASSWORD}`,
+        },
+      },
+    )
     .then(response => response.data)
     .catch(error => {
       if (error.response) {

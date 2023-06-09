@@ -40,7 +40,6 @@ const App = ({navigation}: any) => {
       await AsyncStorage.setItem('@name', '' + userInfo.user.name);
       await AsyncStorage.setItem('@email', '' + userInfo.user.email);
       let response = await getUserApi(userInfo.user.email);
-      console.log(response, userInfo.user.email);
 
       if (response.mensagem == 'OK') {
         await AsyncStorage.setItem('@loggedIn', 'true');
